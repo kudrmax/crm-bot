@@ -1,3 +1,0 @@
-yadisk
-python-dotenv
-requests

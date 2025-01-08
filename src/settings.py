@@ -18,7 +18,7 @@ class MyBaseSettings(BaseSettings):
 
 
 class Server(MyBaseSettings):
-    api_url: str = f'http://api:8000/api/v1'
+    api_url: str = f'http://api:8000/api/v2'  # 'http://api:8000/api/v2'
 
     class Config:
         env_prefix = 'SERVER_'

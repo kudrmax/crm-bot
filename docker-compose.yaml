@@ -9,3 +9,8 @@ services:
       - .:/bot
     env_file:
       - .env
+    networks:
+      - crm_network
+networks:
+  crm_network:
+    external: true

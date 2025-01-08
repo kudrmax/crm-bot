@@ -80,7 +80,7 @@ class ContactHelper(RequestsHelper, TelegramHelper):
     @classmethod
     async def create_contact(cls, name: str):
         await cls.create_request(
-            settings.server.api_url + '/contacts/new',
+            settings.server.api_url + '/contacts/create/',
             RequestType.post,
             {'name': name}
         )
@@ -90,14 +90,14 @@ class ContactHelper(RequestsHelper, TelegramHelper):
         field_to_update = field_to_update.lower()
 
         response = await cls.create_request(
-            f'{settings.server.api_url}/contacts/{name}',
+            f'{settings.server.api_url}/contacts/{name}/get/',
             RequestType.get
         )
 
         contact = response.json()
 
         response = await cls.create_request(
-            f'{settings.server.api_url}/contacts/{name}',
+            f'{settings.server.api_url}/contacts/{name}/update/',
             RequestType.put,
             {field_to_update: new_value}
         )
@@ -111,7 +111,7 @@ class ContactHelper(RequestsHelper, TelegramHelper):
     @classmethod
     async def find_contacts_by_name(cls, name: str) -> List[str] | None:
         response = await cls.create_request(
-            f'{settings.server.api_url}/contacts/{name}/search',
+            f'{settings.server.api_url}/contacts/{name}/get_similar/',
             RequestType.get
         )
 
@@ -142,7 +142,7 @@ class ContactHelper(RequestsHelper, TelegramHelper):
     @classmethod
     async def get_contact_by_name(cls, name: str):
         response = await cls.create_request(
-            f'{settings.server.api_url}/contacts/{name}',
+            f'{settings.server.api_url}/contacts/{name}/get/',
             RequestType.get
         )
         contact = response.json()
@@ -151,7 +151,7 @@ class ContactHelper(RequestsHelper, TelegramHelper):
     @classmethod
     async def get_contact_data_by_name(cls, name: str) -> Dict[str, str] | None:
         response = await cls.create_request(
-            f'{settings.server.api_url}/contacts/{name}',
+            f'{settings.server.api_url}/contacts/{name}/get/',
             RequestType.get,
         )
         contact = response.json()
@@ -160,14 +160,14 @@ class ContactHelper(RequestsHelper, TelegramHelper):
     @classmethod
     async def delete_contact(cls, name: str):
         response = await cls.create_request(
-            f'{settings.server.api_url}/contacts/{name}',
+            f'{settings.server.api_url}/contacts/{name}/delete/',
             RequestType.delete,
         )
 
     @classmethod
     async def get_last_contacts(cls):
         response = await cls.create_request(
-            f'{settings.server.api_url}/contacts/get_last_contacts',
+            f'{settings.server.api_url}/contacts/get_lasts/',
             RequestType.get,
         )
         return [contact['name'] for contact in response.json()]
@@ -175,7 +175,7 @@ class ContactHelper(RequestsHelper, TelegramHelper):
     @classmethod
     async def get_all_contacts(cls) -> str:
         response = await cls.create_request(
-            f'{settings.server.api_url}/contacts/',
+            f'{settings.server.api_url}/contacts/get/',
             RequestType.get,
         )
         contacts = response.json()
@@ -225,7 +225,7 @@ class LogHelper(RequestsHelper, TelegramHelper):
     @classmethod
     async def get_all_logs(cls, name: str) -> Tuple[str, Dict[int, UUID]]:
         response = await cls.create_request(
-            f'{settings.server.api_url}/logs/{name}/by_date',
+            f'{settings.server.api_url}/contacts/{name}/logs/get_all/list/',
             RequestType.get
         )
         logs = response.json()['data']
@@ -237,7 +237,7 @@ class LogHelper(RequestsHelper, TelegramHelper):
         print(f'{log_str = }, {name = }, {date = }')
         if date is None:
             await cls.create_request(
-                f'{settings.server.api_url}/logs/new',
+                f'{settings.server.api_url}/contacts/{name}/logs/create/',
                 RequestType.post,
                 {
                     'name': name,
@@ -246,7 +246,7 @@ class LogHelper(RequestsHelper, TelegramHelper):
             )
         else:
             await cls.create_request(
-                f'{settings.server.api_url}/logs/new/{date}',
+                f'{settings.server.api_url}/contacts/{name}/logs/create/{date}',
                 RequestType.post,
                 {
                     'name': name,
@@ -257,7 +257,7 @@ class LogHelper(RequestsHelper, TelegramHelper):
     @classmethod
     async def add_empty_log(cls, name: str):
         response = await cls.create_request(
-            f'{settings.server.api_url}/logs/new/empty',
+            f'{settings.server.api_url}/contacts/{name}/logs/create/empty/',
             RequestType.post,
             {'name': name}
         )
@@ -284,7 +284,7 @@ class LogHelper(RequestsHelper, TelegramHelper):
     @classmethod
     async def edit_log_text(cls, log_id: UUID, new_text: str):
         response = await cls.create_request(
-            f'{settings.server.api_url}/logs/edit/{log_id}',
+            f'{settings.server.api_url}/logs/{log_id}/update/',
             RequestType.put,
             {'log': new_text}
         )
@@ -300,7 +300,7 @@ class LogHelper(RequestsHelper, TelegramHelper):
     @classmethod
     async def delete_log(cls, log_id: int):
         response = await cls.create_request(
-            f'{settings.server.api_url}/logs/{log_id}',
+            f'{settings.server.api_url}/logs/{log_id}/delete/',
             RequestType.delete
         )
 
@@ -311,7 +311,7 @@ class LogHelper(RequestsHelper, TelegramHelper):
     @classmethod
     async def get_log_by_id(cls, log_id: int):
         response = await cls.create_request(
-            f'{settings.server.api_url}/logs/{log_id}/by_log_id',
+            f'{settings.server.api_url}/logs/{log_id}/get/',
             RequestType.get
         )
         return response.json()
@@ -344,7 +344,7 @@ class StatsHelper(RequestsHelper, TelegramHelper):
                 result.append(Types.long)
 
         response = await cls.create_request(
-            f'{settings.server.api_url}/stats/days_count_since_last_interaction',
+            f'{settings.server.api_url}/stats/days_count_since_last_interaction/',
             RequestType.get
         )
         contacts_with_days: List[Tuple[str, int]] = []
